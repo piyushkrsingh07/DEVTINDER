@@ -7,3 +7,6 @@
 Install nodemaon and update script inside package.json
 -What are dependencirs
 -What is the use og -g while npm install
+-Play with the routes matter a lot
+-Install Postman app and make a workspace/collection >test api call 
+-write logic to handle GET,POST,DELETE,PATCH
