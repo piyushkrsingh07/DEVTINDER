@@ -59,33 +59,98 @@ const app=express();
 // })
 
 
-app.use("/user",[
-    (req,res,next)=>{
-        console.log("Handling the route user 1")
+// app.use("/user",[
+//     (req,res,next)=>{
+//         console.log("Handling the route user 1")
       
 
-      next();
+//       next();
     
 
-},
-(req,res,next)=>{
-    console.log("Handling the route user 2")
-    next()
+// },
+// (req,res,next)=>{
+//     console.log("Handling the route user 2")
+//     next()
  
-},
-],
-(req,res,next)=>{
-    console.log("Handling the route user 3")
-    next()
-},
-(req,res,next)=>{
-    console.log("Handling the route user 4")
-    res.send("4th Response")
+// },
+// ],
+// (req,res,next)=>{
+//     console.log("Handling the route user 3")
+//     next()
+// },
+// (req,res,next)=>{
+//     console.log("Handling the route user 4")
+//     res.send("4th Response")
 
-}
-)
+// }
+// )
+
+// app.get("/user",(req,res,next)=>{
+//     console.log("Handling the route user 1!!")
+
+//     next()
+   
+// })
+
+// app.get("/user",(req,res,next)=>{
+//     console.log("Handling the route user 2!!")
+    
+//    res.send("response 2 done")
+//    next()
+// })
 
 
+
+// app.get("/",(req,res,next)=>{
+//     next()
+// })
+// app.get("/user",
+//     (req,res,next)=>{
+//    console.log("Handling /user route")
+//    next()
+// },
+// (req,res,next)=>{
+//     next();
+
+// },
+// (req,res,next)=>{
+//     res.send("2nd route handler")
+// }
+// )
+
+//Handle Auth Middleware if the request is authorized
+// app.use("/admin",(req,res,next)=>{
+//     console.log("admin auth getting checked")
+//   const token="xjjfjewj";
+//   const isAdminAuthorized=token==="xyz"
+//   if(!isAdminAuthorized){
+//     res.status(401).send("Unauthorized Access")
+//   }else{
+//     next()
+//   }
+// })
+
+const {adminAuth,userAuth}=require("./middlewares/auth")
+
+app.use("/admin",adminAuth)
+
+app.post("/user/login",(req,res)=>{
+     res.send("User login in successfully")
+})
+
+app.get("/user",userAuth,(req,res)=>{
+    res.send("user data sent")
+})
+app.get("/admin/getAllData",(req,res)=>{
+
+res.send("Admin auth is geeting checked!!")
+
+
+})
+
+app.delete("/admin/deleteUser",(req,res)=>{
+   res.send("Deleted a user")
+})
 
 
 app.listen(7777,()=>{
