@@ -130,28 +130,54 @@ const app=express();
 //   }
 // })
 
-const {adminAuth,userAuth}=require("./middlewares/auth")
+// const {adminAuth,userAuth}=require("./middlewares/auth")
 
-app.use("/admin",adminAuth)
+// app.use("/admin",adminAuth)
 
-app.post("/user/login",(req,res)=>{
-     res.send("User login in successfully")
+// app.post("/user/login",(req,res)=>{
+//      res.send("User login in successfully")
+// })
+
+// app.get("/user",userAuth,(req,res)=>{
+//     res.send("user data sent")
+// })
+// app.get("/admin/getAllData",(req,res)=>{
+
+// res.send("Admin auth is geeting checked!!")
+
+
+// })
+
+// app.delete("/admin/deleteUser",(req,res)=>{
+//    res.send("Deleted a user")
+// })
+
+
+app.get("/getUserData",(req,res)=>{
+         
+    try{
+
+        throw new Error("bjkfjjbdsf")
+        res.send("User data sent")
+    }catch(error){
+         res.status(500).send("Some Error Contact support team")
+    }
+
+
+
+  
+
 })
 
-app.get("/user",userAuth,(req,res)=>{
-    res.send("user data sent")
-})
-app.get("/admin/getAllData",(req,res)=>{
+    //for some unhandled error
 
-res.send("Admin auth is geeting checked!!")
+    app.use("/",(error,req,res,next)=>{ 
+        if(error){
 
-
-})
-
-app.delete("/admin/deleteUser",(req,res)=>{
-   res.send("Deleted a user")
-})
-
+           
+            res.status(500).send("Something went wrong")
+        }
+    })
 
 app.listen(7777,()=>{
     console.log("server is successfully listen on port 7777.....")
