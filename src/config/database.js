@@ -10,7 +10,7 @@ const connectDB=async()=>{
 connectDB().then(()=>{
   console.log("Database connection succesfully ")
 }).catch((err)=>{
-   console.error("Database connection cannot be completed")
+   console.error("Database connection cannot be completed",err)
 })
 
 module.exports = connectDB;
