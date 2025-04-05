@@ -1,4 +1,5 @@
 const express=require('express');
+const connectDB = require('./config/database');
 
 const app=express();
 
@@ -153,32 +154,45 @@ const app=express();
 // })
 
 
-app.get("/getUserData",(req,res)=>{
+// app.get("/getUserData",(req,res)=>{
          
-    try{
+//     try{ 
 
-        throw new Error("bjkfjjbdsf")
-        res.send("User data sent")
-    }catch(error){
-         res.status(500).send("Some Error Contact support team")
-    }
+//         throw new Error("bjkfjjbdsf")
+//         res.send("User data sent")
+//     }catch(error){
+//          res.status(500).send("Some Error Contact support team")
+//     }
+    
 
 
 
   
 
-})
+// })
 
-    //for some unhandled error
+//     //for some unhandled error
 
-    app.use("/",(error,req,res,next)=>{ 
-        if(error){
+//     app.use("/",(error,req,res,next)=>{ 
+//         if(error){
 
            
-            res.status(500).send("Something went wrong")
-        }
-    })
+//             res.status(500).send("Something went wrong")
+//         }
+//     })
 
-app.listen(7777,()=>{
-    console.log("server is successfully listen on port 7777.....")
-})
+// app.listen(7777,()=>{
+//     console.log("server is successfully listen on port 7777.....")
+// })
+
+connectDB().then(() => {
+    // Start the server only after DB connects
+    const PORT = process.env.PORT || 3000;
+    app.listen(PORT, () => {
+      console.log(`🚀 Server running on port ${PORT}`);
+    });
+  })
+  .catch((err)=>{
+    console.error("Database cannot be connected",err)
+  })
+
