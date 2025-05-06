@@ -2,6 +2,9 @@ const mongoose=require('mongoose')
 
 
 const validator = require('validator');
+const jwt = require("jsonwebtoken");
+const bcrypt = require("bcrypt");
+
 
 const userSchema=new mongoose.Schema({
    firstName:{
@@ -76,8 +79,10 @@ throw new Error("Not valid url",value)
 
 userSchema.methods.getJWT=async function(){
 
-   const user=this;
-   const token=await jwt.sign({_id:user._id},process.env.SECRET_URL,{expiresIn:'1d'})
+   const user=this; //inside arrow function this does not work
+   const token=await jwt.sign({_id:user._id},process.env.SECRET_URL,{
+      expiresIn:"1d",
+   })
    return token;
 }
 
@@ -85,6 +90,10 @@ userSchema.methods.validatePassword=async function(passwordInputByUser){
    const user=this;
    const passwordHash=user.password;
    const isPasswordValid=await bcrypt.compare(passwordInputByUser,passwordHash)
+   if (!bcrypt) {
+      console.log("bcrypt nhi aaya")
+      throw new Error("bcrypt is not loaded in validatePassword");
+    }
 
    return isPasswordValid
 }
