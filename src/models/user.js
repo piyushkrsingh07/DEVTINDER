@@ -10,6 +10,7 @@ const userSchema=new mongoose.Schema({
    firstName:{
     type:String,
     required:true,
+    index:true,
     minLength:4,
     maxLength:50
    },
@@ -19,7 +20,7 @@ const userSchema=new mongoose.Schema({
    emailId:{
     type:String,
     required:true,
-    unique:true,
+    unique:true, //mongo db uniquely create a index for unique field
     lowercase:true,
     trim:true,
     validate(value){
@@ -60,6 +61,10 @@ throw new Error("Not valid url",value)
 
    gender:{
     type:String,
+    enum:{
+      values:["male","female","other"],
+      message:`{VALUE} is not a valid gender type`
+    },
     validate(value){
       if(!["male","female","other"].includes(value)){
          throw new Error("Gender data is not valid")
@@ -76,6 +81,9 @@ throw new Error("Not valid url",value)
 })
 
 //methods to create methods for user schema 
+
+// User.find({firstName:"Piyush",lastName:"Saini"})
+userSchema.index({firstName:1,lastName:1})  //isse queries fast ho jaengi
 
 userSchema.methods.getJWT=async function(){
 

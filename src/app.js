@@ -30,12 +30,6 @@ app.use("/",authRouter)
 app.use("/",profileRouter)
 app.use("/",requestRouter)
 
-
-
-
-
-
-
 connectDB().then(() => {
     // Start the server only after DB connects
     const PORT = process.env.PORT || 3000;

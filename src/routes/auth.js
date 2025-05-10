@@ -3,7 +3,7 @@ const authRouter=express.Router()
 const {validateSignUpData}=require("../utils/validation")
 const User=require("../models/user")
 const bcrypt=require("bcrypt")
-
+const {userAuth}=require("../middlewares/auth")
 
 authRouter.post("/signup",async(req,res)=>{
 
@@ -12,7 +12,7 @@ authRouter.post("/signup",async(req,res)=>{
 
     validateSignUpData(req)
 
-    const {firstName,lastName,emailId,password}=req.body;
+    const {firstName,lastName,emailId,password,skills,age}=req.body;
 
     const passwordHash= await bcrypt.hash(password,10)
     console.log(passwordHash)
@@ -21,6 +21,8 @@ authRouter.post("/signup",async(req,res)=>{
       lastName,
       emailId,
       password:passwordHash,
+      skills,
+      age
     })
     const savedUser = await user.save();
     const token = await savedUser.getJWT();
@@ -61,5 +63,12 @@ authRouter.post("/login",async(req,res)=>{
     res.status(400).send("Error loggin in the user:"+error.message)
   }
 })
+
+authRouter.post("/logout", async (req, res) => {
+  res.cookie("token", null, {
+    expires: new Date(Date.now()),
+  });
+  res.send("Logout Successfully!!");
+});
 
 module.exports=authRouter
