@@ -54,6 +54,9 @@ res.json({message:"Connection fetch Successfully",data:data})
     }
 })
 
+
+//:status ->this is params
+//?limit=3 ->this is query
 userRouter.get("/feed",userAuth,async(req,res)=>{
     try{
 //User should see all the cards expect
@@ -63,7 +66,11 @@ userRouter.get("/feed",userAuth,async(req,res)=>{
 //4.already send connection request
 
 const loggedInUser=req.user;
+const page =parseInt(req.query.page) || 1;
+let limit=parseInt(req.query.limit) || 10
 
+limit=limit > 50?50:limit
+const skip=(page-1)*limit;
 //find all the connection request (sent+received)
 //i don't want them in my feed
 const connectionRequest=await ConnectionRequest.find({
@@ -85,7 +92,7 @@ const user=await User.find({
     {_id:{$nin:Array.from(hideUserFromFeed)}}, //not in this array
     {_id:{$ne:loggedInUser._id}},  //$ne->not equal to
   ]
-}).select(USER_SAFE_DATA)
+}).select(USER_SAFE_DATA).skip(skip).limit(limit)
 res.send(user)
     }catch(error){
         res.status(400).json({message:error.message})
