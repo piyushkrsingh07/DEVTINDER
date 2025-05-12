@@ -16,9 +16,12 @@ authRouter
 -POST/request/review/rejected/:requestId
 
 ## USERROUTER
--GET/user/connections
 -GET/user/requests
+-GET/user/connections
+
 GET/user/feed-GETS you the profile of other user on platform
+
+
 Status:ignore,interested,accepted,rejected
 
 
