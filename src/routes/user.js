@@ -1,6 +1,7 @@
 const express=require('express')
 const { userAuth } = require('../middlewares/auth')
 const ConnectionRequest=require("../models/connectionRequest")
+const User = require('../models/user')
 const userRouter=express.Router()
 
 const USER_SAFE_DATA="firstName lastName photoUrl age gender about skills"
@@ -55,7 +56,37 @@ res.json({message:"Connection fetch Successfully",data:data})
 
 userRouter.get("/feed",userAuth,async(req,res)=>{
     try{
+//User should see all the cards expect
+//0. his own card
+//1. his connections
+//3. ignored people
+//4.already send connection request
 
+const loggedInUser=req.user;
+
+//find all the connection request (sent+received)
+//i don't want them in my feed
+const connectionRequest=await ConnectionRequest.find({
+ $or:[
+    {fromUserId:loggedInUser._id},
+    {toUserId:loggedInUser._id}
+ ]
+}).select("fromUserId toUserId").populate("fromUserId","firstName").populate("toUserId","firstName")
+
+const hideUserFromFeed=new Set()
+connectionRequest.forEach((req)=>{
+    hideUserFromFeed.add(req.fromUserId._id.toString())
+    hideUserFromFeed.add(req.toUserId._id.toString())
+   
+})
+
+const user=await User.find({
+  $and:[
+    {_id:{$nin:Array.from(hideUserFromFeed)}}, //not in this array
+    {_id:{$ne:loggedInUser._id}},  //$ne->not equal to
+  ]
+}).select(USER_SAFE_DATA)
+res.send(user)
     }catch(error){
         res.status(400).json({message:error.message})
     }
